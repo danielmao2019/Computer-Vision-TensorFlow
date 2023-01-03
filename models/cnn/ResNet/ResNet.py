@@ -199,9 +199,3 @@ class ResNet(tf.keras.Model):
             inputs=inputs, outputs=outputs,
             name=f"ResNet{self.version}",
         )
-
-
-if __name__ == "__main__":
-    model = ResNet(num_classes=1000, version=50)
-    model = model.build(input_shape=(224, 224, 3))
-    model.summary()

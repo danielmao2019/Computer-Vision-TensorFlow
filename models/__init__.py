@@ -1,2 +1,9 @@
-import cnn.MobileNets.MobileNetV3
-import cnn.SENet
+"""
+MODELS API.
+"""
+from models import cnn
+
+
+__all__ = (
+    "cnn",
+)
