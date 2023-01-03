@@ -1,0 +1,4 @@
+autopep8
+tensorflow
+tensorflow-datasets
+matplotlib

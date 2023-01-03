@@ -1,0 +1,4 @@
+num_classes: 80
+loss: SSD_loss
+model: SSD
+epochs: 50

@@ -1,0 +1,28 @@
+dataloader:
+    batch_size: 64
+    preprocessor:
+        image_height: 448
+        image_width: 448
+    augmentor:
+        random_zoom:
+            probability: 1.0
+            lower: -0.2
+            upper: +0.2
+        random_translation:
+            probability: 1.0
+            x_max: 0.2
+            y_max: 0.2
+        random_brightness:
+            probability: 1.0
+            max_delta: 1.5
+        random_saturation:
+            probability: 1.0
+            lower: 0.67
+            upper: 1.5
+model:
+    dropout: True
+    dropout_rate: 0.5
+epochs: 135
+optimizer:
+    momentum: 0.9
+    decay_rate: 0.0005
