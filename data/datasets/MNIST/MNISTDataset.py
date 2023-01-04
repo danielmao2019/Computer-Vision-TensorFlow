@@ -13,15 +13,21 @@ class MNISTDataset(Dataset):
             raise ValueError(f"[ERROR] Argument \'purpose\' should be in {self.PURPOSE_OPTIONS}. Got {purpose}.")
         whole = tfds.load('mnist', with_info=False)
         self.core = whole['train'] if purpose == 'training' else whole['test']
+        self.core = self.core.map(lambda example: (
+            tf.cast(example['image'], dtype=tf.float32),
+            tf.cast(example['label'], dtype=tf.int64),
+        ))
+        assert isinstance(self.core, tf.data.Dataset), f"{type(self.core)=}"
 
-    def __len__(self):
-        return len(self.core)
-
-    def __iter__(self):
-        for element in self.core:
-            image = tf.cast(element['image'], dtype=tf.float32)
-            label = tf.cast(element['label'], dtype=tf.int64)
-            yield image, label
+    def get_example(self):
+        image, label = next(iter(self.core))
+        assert isinstance(image, tf.Tensor), f"{type(image)=}"
+        assert len(image.shape) == 3, f"{image.shape=}"
+        assert image.dtype == tf.float32, f"{image.dtype=}"
+        assert isinstance(label, tf.Tensor), f"{type(label)=}"
+        assert len(label.shape) == 0, f"{label.shape=}"
+        assert label.dtype == tf.int64, f"{label.dtype=}"
+        return image, label
 
     def __str__(self):
         image, label = self.get_example()

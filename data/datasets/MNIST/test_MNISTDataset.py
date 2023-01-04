@@ -7,5 +7,5 @@ if __name__ == "__main__":
     image, label = dataset.get_example()
     plt.figure()
     plt.imshow(image)
-    plt.title(f"{label=}")
+    plt.title(f"label={label.numpy()}")
     plt.show()

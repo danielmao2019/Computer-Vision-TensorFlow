@@ -10,6 +10,13 @@ class Dataset(object):
     def __init__(self):
         self.core = None
 
+    def __len__(self):
+        return len(self.core)
+
+    def __iter__(self):
+        for element in self.core:
+            yield element
+
     def shuffle(self, buffer_size=None, seed=None):
         """
         Returns:
@@ -20,7 +27,20 @@ class Dataset(object):
         if seed is not None:
             tf.random.set_seed(seed)
         self.core = self.core.shuffle(buffer_size=buffer_size, seed=seed)
+        return self
 
-    def get_example(self):
-        example = next(iter(self))
-        return example
+    def map(self, func):
+        self.core = self.core.map(func)
+        return self
+
+    def batch(self, batch_size):
+        self.core = self.core.batch(batch_size)
+        return self
+
+    def unbatch(self):
+        self.core = self.core.unbatch()
+        return self
+
+    def take(self, count):
+        self.core = self.core.take(count)
+        return self

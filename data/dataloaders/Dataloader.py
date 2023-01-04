@@ -1,20 +1,24 @@
 class Dataloader(object):
 
-    def __init__(self, dataset, shuffle, preprocessor):
+    def __init__(self, dataset, shuffle, preprocessor, batch_size):
         """
         Args:
             dataset (data.datasets.Dataset).
             shuffle (bool).
             preprocessor (data.preprocess.Preprocessor).
+            batch_size (int).
         """
         self.dataset = dataset
         if shuffle:
             self.dataset.shuffle()
-        self.preprocessor = preprocessor
+        if preprocessor:
+            self.dataset.map(preprocessor)
+        if batch_size:
+            self.dataset.batch(batch_size)
 
     def __len__(self):
         return len(self.dataset)
 
     def __iter__(self):
-        for input, label in self.dataset:
-            yield self.preprocessor(input, label)
+        for element in self.dataset:
+            yield element
