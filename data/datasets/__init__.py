@@ -1,9 +1,11 @@
 """
 DATASETS API.
 """
-from data.datasets import MNIST
+from data.datasets.Dataset import Dataset
+from data.datasets.MNIST.MNISTDataset import MNISTDataset
 
 
 __all__ = (
-    "MNIST",
+    "Dataset",
+    "MNISTDataset",
 )

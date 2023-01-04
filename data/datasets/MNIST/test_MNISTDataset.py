@@ -3,11 +3,9 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
-    dataset = MNISTDataset(purpose='training').tensorflow()
-    dataset = dataset.batch(8)
-    image_batch, label_batch = next(iter(dataset))
-    image, label = image_batch[0], label_batch[0]
+    dataset = MNISTDataset(purpose='training')
+    image, label = dataset.get_example()
     plt.figure()
     plt.imshow(image)
-    plt.title(f"Example image of digit {label}")
+    plt.title(f"{label=}")
     plt.show()
