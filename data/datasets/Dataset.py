@@ -20,6 +20,10 @@ class Dataset(object):
     def get_example(self):
         return next(iter(self.core))
 
+    def cache(self):
+        self.core = self.core.cache()
+        return self
+
     def shuffle(self, buffer_size=None, seed=None):
         """
         Returns:
@@ -33,7 +37,7 @@ class Dataset(object):
         return self
 
     def map(self, func):
-        self.core = self.core.map(func)
+        self.core = self.core.map(func, num_parallel_calls=tf.data.AUTOTUNE)
         return self
 
     def batch(self, batch_size):
@@ -46,4 +50,8 @@ class Dataset(object):
 
     def take(self, count):
         self.core = self.core.take(count)
+        return self
+
+    def prefetch(self):
+        self.core = self.core.prefetch(buffer_size=tf.data.AUTOTUNE)
         return self

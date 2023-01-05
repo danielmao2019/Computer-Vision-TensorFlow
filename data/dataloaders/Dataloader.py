@@ -11,10 +11,12 @@ class Dataloader(object):
         self.dataset = dataset
         if shuffle:
             self.dataset.shuffle()
+        # TODO: vectorize mapping
         if preprocessor:
             self.dataset.map(preprocessor)
         if batch_size:
             self.dataset.batch(batch_size)
+        self.dataset.prefetch()
 
     def __len__(self):
         return len(self.dataset)
