@@ -5,7 +5,7 @@ import time
 from tqdm import tqdm
 
 import logging
-logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', level=logging.INFO)
+logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', level=logging.DEBUG)
 
 
 def train_loop(dataloader, model, loss, optimizer, metric):
@@ -72,6 +72,7 @@ def train_model(specs):
     end_epoch = start_epoch + epochs
     ####################################################################################################
     device = "/gpu:0" if tf.config.list_physical_devices('GPU') else "/cpu:0"
+    model.trainable = True
     with tf.device(device):
         for cur_epoch in range(start_epoch, end_epoch):
             start_time = time.time()
