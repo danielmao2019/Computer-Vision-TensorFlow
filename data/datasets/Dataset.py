@@ -17,6 +17,9 @@ class Dataset(object):
         for element in self.core:
             yield element
 
+    def get_example(self):
+        return next(iter(self.core))
+
     def shuffle(self, buffer_size=None, seed=None):
         """
         Returns:
