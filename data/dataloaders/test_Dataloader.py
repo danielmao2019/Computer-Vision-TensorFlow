@@ -40,11 +40,13 @@ def test_MNIST_map(purpose, image_size):
         data.preprocess.image.Resize(size=image_size),
     ])
     dataloader = Dataloader(dataset=dataset, shuffle=True, preprocessor=preprocessor, batch_size=1)
-    batch_image, batch_label = next(iter(dataloader))
-    assert batch_image.shape == (1,) + image_size + (1,)
-    assert batch_label.shape == (1,)
+    for _ in range(3):
+        batch_image, batch_label = next(iter(dataloader))
+        assert batch_image.shape == (1,) + image_size + (1,)
+        assert batch_label.shape == (1,)
 
 
+@pytest.mark.slow
 @pytest.mark.parametrize("purpose", [
     'training',
     'evaluation',

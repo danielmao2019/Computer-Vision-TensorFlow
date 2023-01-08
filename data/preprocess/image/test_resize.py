@@ -1,20 +1,35 @@
-from resize import Resize
-import data
-import matplotlib.pyplot as plt
+import pytest
+import tensorflow as tf
+from data.preprocess.image import Resize
 
 
-if __name__ == "__main__":
-    dataset = data.datasets.MNIST.MNISTDataset(purpose='training')
-    example = dataset.example
-    image, label = example['image'], example['label']
-    preprocessor = data.preprocess.Preprocessor(transforms=[
-        data.preprocess.image.ToTensor(),
-        Resize(size=(224, 224)),
-    ])
-    new_image, new_label = preprocessor(image, label)
-    fig, (ax1, ax2) = plt.subplots(1, 2)
-    ax1.imshow(image)
-    ax1.set_title("Original image")
-    ax2.imshow(new_image)
-    ax2.set_title("Transformed image")
-    plt.show()
+@pytest.mark.parametrize("input_size, output_size", [
+    (  # test case
+        (28, 28), (224, 224),
+    ),
+    (  # test case
+        (1024, 1024), (256, 256),
+    ),
+])
+def test_resize_cls_label(input_size, output_size):
+    input_image = tf.zeros(shape=input_size+(3,), dtype=tf.float32)
+    input_label = tf.zeros(shape=(), dtype=tf.int64)
+    output_image, output_label = Resize(size=output_size)(input_image, input_label)
+    assert output_image.shape == output_size + (3,)
+    assert output_label == input_label
+
+
+@pytest.mark.parametrize("input_size, output_size", [
+    (  # test case
+        (28, 28), (224, 224),
+    ),
+    (  # test case
+        (1024, 1024), (256, 256),
+    ),
+])
+def test_resize_seg_label(input_size, output_size):
+    input_image = tf.zeros(shape=input_size+(3,), dtype=tf.float32)
+    input_label = tf.zeros(shape=input_size, dtype=tf.int64)
+    output_image, output_label = Resize(size=output_size)(input_image, input_label)
+    assert output_image.shape == output_size + (3,)
+    assert output_label.shape == output_size
