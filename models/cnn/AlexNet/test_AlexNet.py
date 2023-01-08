@@ -1,3 +1,4 @@
+import pytest
 from AlexNet import AlexNet
 import tensorflow as tf
 
