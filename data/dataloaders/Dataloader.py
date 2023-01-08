@@ -1,6 +1,6 @@
 class Dataloader(object):
 
-    def __init__(self, dataset, shuffle, preprocessor, batch_size):
+    def __init__(self, dataset, shuffle=True, preprocessor=None, batch_size=None):
         """
         Args:
             dataset (data.datasets.Dataset).
@@ -9,6 +9,9 @@ class Dataloader(object):
             batch_size (int).
         """
         self.dataset = dataset
+        self.shuffle = shuffle
+        self.preprocessor = preprocessor
+        self.batch_size = batch_size
         if shuffle:
             self.dataset.shuffle()
         # TODO: vectorize mapping
