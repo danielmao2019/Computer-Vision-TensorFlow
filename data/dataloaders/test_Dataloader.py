@@ -1,31 +1,60 @@
-from Dataloader import Dataloader
+import pytest
 import data
 from tqdm import tqdm
 
 
-def test_map_and_batch(dataset, preprocessor, batch_size):
-    dataloader = Dataloader(dataset=dataset, shuffle=True, preprocessor=preprocessor, batch_size=batch_size)
-    print(f"{len(dataloader)=}")
-    batch_image, batch_label = next(iter(dataloader))
-    print(f"{batch_image.shape=}")
-    print(f"{batch_label.shape=}")
+# TODO: previous runs gave DeprecationWarning: `np.bool8` is a deprecated alias for `np.bool_`.
+@pytest.mark.parametrize("purpose, batch_size, expected_length", [
+    (  # test case
+        'training', 1, 60000,
+    ),
+    (  # test case
+        'training', 4, 15000,
+    ),
+    (  # test case
+        'evaluation', 1, 10000,
+    ),
+    (  # test case
+        'evaluation', 4, 2500,
+    ),
+])
+def test_MNIST_batch_and_len(purpose, batch_size, expected_length):
+    dataset = data.datasets.MNISTDataset(purpose=purpose)
+    dataloader = data.dataloaders.Dataloader(dataset=dataset, shuffle=True, preprocessor=None, batch_size=batch_size)
+    assert dataloader.batch_size == batch_size
+    assert len(dataloader) == expected_length
 
 
-def test_iteration(dataset):
-    dataloader = Dataloader(dataset=dataset, shuffle=True)
-    print(f"{len(dataloader)=}")
-    class_count = {}
-    for image, label in tqdm(dataloader):
-        assert image.shape == (image_h, image_w, 1)
-        class_count[label.numpy()] = class_count.get(label.numpy(), 0) + 1
-    print(f"{class_count=}")
-
-
-if __name__ == "__main__":
-    image_h = image_w = 224
-    dataset = data.datasets.MNISTDataset(purpose='training')
+@pytest.mark.parametrize("purpose, image_size", [
+    (  # test case
+        'training', (224, 224),
+    ),
+    (  # test case
+        'evaluation', (128, 128),
+    ),
+])
+def test_MNIST_map(purpose, image_size):
+    dataset = data.datasets.MNISTDataset(purpose=purpose)
     preprocessor = data.preprocess.Preprocessor(transforms=[
-        data.preprocess.image.Resize(size=(image_h, image_w)),
+        data.preprocess.image.Resize(size=image_size),
     ])
-    test_map_and_batch(dataset, preprocessor, batch_size=8)
-    test_iteration(dataset)
+    dataloader = data.dataloaders.Dataloader(dataset=dataset, shuffle=True, preprocessor=preprocessor, batch_size=1)
+    batch_image, batch_label = next(iter(dataloader))
+    assert batch_image.shape == (1,) + image_size + (1,)
+    assert batch_label.shape == (1,)
+
+
+@pytest.mark.parametrize("purpose", [
+    'training',
+    'evaluation',
+])
+def test_MNIST_iter(purpose):
+    dataset = data.datasets.MNISTDataset(purpose=purpose)
+    dataloader = data.dataloaders.Dataloader(dataset=dataset, shuffle=True, preprocessor=None, batch_size=1)
+    class_count = [0] * 10
+    for _, label in tqdm(dataloader):
+        class_count[int(label)] += 1
+    if purpose == 'training':
+        assert class_count == [5923, 6742, 5958, 6131, 5842, 5421, 5918, 6265, 5851, 5949], f"{class_count=}"
+    else:
+        assert class_count == [980, 1135, 1032, 1010, 982, 892, 958, 1028, 974, 1009], f"{class_count=}"
