@@ -1,4 +1,5 @@
 import pytest
+from data.dataloaders import Dataloader
 import data
 from tqdm import tqdm
 
@@ -20,7 +21,7 @@ from tqdm import tqdm
 ])
 def test_MNIST_batch_and_len(purpose, batch_size, expected_length):
     dataset = data.datasets.MNISTDataset(purpose=purpose)
-    dataloader = data.dataloaders.Dataloader(dataset=dataset, shuffle=True, preprocessor=None, batch_size=batch_size)
+    dataloader = Dataloader(dataset=dataset, shuffle=True, preprocessor=None, batch_size=batch_size)
     assert dataloader.batch_size == batch_size
     assert len(dataloader) == expected_length
 
@@ -38,7 +39,7 @@ def test_MNIST_map(purpose, image_size):
     preprocessor = data.preprocess.Preprocessor(transforms=[
         data.preprocess.image.Resize(size=image_size),
     ])
-    dataloader = data.dataloaders.Dataloader(dataset=dataset, shuffle=True, preprocessor=preprocessor, batch_size=1)
+    dataloader = Dataloader(dataset=dataset, shuffle=True, preprocessor=preprocessor, batch_size=1)
     batch_image, batch_label = next(iter(dataloader))
     assert batch_image.shape == (1,) + image_size + (1,)
     assert batch_label.shape == (1,)
@@ -50,7 +51,7 @@ def test_MNIST_map(purpose, image_size):
 ])
 def test_MNIST_iter(purpose):
     dataset = data.datasets.MNISTDataset(purpose=purpose)
-    dataloader = data.dataloaders.Dataloader(dataset=dataset, shuffle=True, preprocessor=None, batch_size=1)
+    dataloader = Dataloader(dataset=dataset, shuffle=True, preprocessor=None, batch_size=1)
     class_count = [0] * 10
     for _, label in tqdm(dataloader):
         class_count[int(label)] += 1
