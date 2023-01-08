@@ -1,22 +1,33 @@
-from SegNet import SegNet
+import pytest
 import tensorflow as tf
+from models.segmentation import SegNet
 
 import logging
 logging.basicConfig(format='%(asctime)s [%(levelname)s] %(message)s', level=logging.DEBUG)
 
 
-def test_forward_pass(model):
-    logging.info(f"[RUNNING] Test case 'forward_pass' started.")
+@pytest.mark.dependency()
+@pytest.mark.parametrize("input_shape", [
+    (224, 224, 1), (224, 224, 3), (512, 512, 3),
+])
+def test_forward_pass(input_shape):
+    model = SegNet(num_classes=10)
+    model = model.build(input_shape=input_shape)
     input = tf.zeros(shape=(1,)+model.layers[0].input_shape[0][1:])
     logging.debug(f"{input.shape=}")
     output = model(input)
     assert len(output.shape) == 4, f"{len(output.shape)=}"
     assert output.shape[:3] == input.shape[:3], f"{output.shape=}"
-    logging.info("[PASSED] Test case 'forward_pass' passed.")
 
 
-def test_overfit(model):
-    logging.info(f"[RUNNING] Test case 'overfit' started.")
+@pytest.mark.dependency(depends=['test_forward_pass'])
+@pytest.mark.slow
+@pytest.mark.parametrize("input_shape", [
+    (128, 128, 3),
+])
+def test_overfit(input_shape):
+    model = SegNet(num_classes=10)
+    model = model.build(input_shape=input_shape)
     model.compile(
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         optimizer=tf.optimizers.SGD(learning_rate=1.0e-01, momentum=0.9),
@@ -27,10 +38,3 @@ def test_overfit(model):
     logging.debug(f"{y_train.shape=}")
     model.trainable = True
     model.fit(x_train, y_train, epochs=50)
-
-
-if __name__ == "__main__":
-    model = SegNet(num_classes=10)
-    model = model.build(input_shape=(128, 128, 3))
-    test_forward_pass(model)
-    test_overfit(model)

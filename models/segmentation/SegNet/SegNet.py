@@ -1,4 +1,5 @@
 import tensorflow as tf
+from models.segmentation.layers import MaxPoolWithArgmax, MaxUnpoolFromArgmax
 
 
 class SegNet(tf.keras.Model):
@@ -18,50 +19,14 @@ class SegNet(tf.keras.Model):
         relu = tf.keras.activations.relu
         return relu(batch_normalization(conv(x)))
 
-    def _max_pool_with_argmax(self, x):
-        """
-        Args:
-            x: A 4-D tensor of shape (N, H, W, C) and dtype tf.float32.
-        Returns:
-            x: A 4-D tensor of shape (N, H/2, W/2, C) and dtype tf.float32.
-            argmax: A 4-D tensor of shape (N, H/2, W/2, C) and dtype tf.int64.
-        """
-        assert x.dtype == tf.float32, f"{x.dtype=}"
-        x, argmax = tf.nn.max_pool_with_argmax(
-            input=x, ksize=(2, 2), strides=(2, 2), padding="SAME",
-        )
-        assert x.shape == argmax.shape, f"{x.shape=}, {argmax.shape=}"
-        assert x.dtype == tf.float32, f"{x.dtype=}"
-        assert argmax.dtype == tf.int64, f"{argmax.dtype=}"
-        return x, argmax
-
-    def _max_unpool_from_argmax(self, x, argmax):
-        """
-        Args:
-            x: A 4-D tensor of shape (N, H, W, C) and dtype tf.float32.
-            argmax: A 4-D tensor of shape (N, H, W, C) and dtype tf.int64.
-        Returns:
-            output: A 4-D tensor of shape (N, 2*H, 2*W, C) and dtype tf.float32.
-        """
-        assert x.shape == argmax.shape, f"{x.shape=}, {argmax.shape=}"
-        assert x.dtype == tf.float32, f"{x.dtype=}"
-        assert argmax.dtype == tf.int64, f"{argmax.dtype=}"
-        indices = tf.expand_dims(tf.reshape(argmax, shape=(-1,)), axis=-1)
-        updates = tf.reshape(x, shape=(-1,))
-        shape = tf.cast(4 * tf.math.reduce_prod(tf.shape(x), keepdims=True), dtype=tf.int64)
-        output_flat = tf.scatter_nd(indices=indices, updates=updates, shape=shape)
-        output = tf.reshape(output_flat, shape=(-1, x.shape[1]*2, x.shape[2]*2, x.shape[3]))
-        assert output.dtype == tf.float32, f"{x.dtype=}"
-        return output
-
     def _encoder_block(self, x, filters_list):
         for filters in filters_list:
             x = self._conv_layer(x, filters)
-        x, argmax = self._max_pool_with_argmax(x)
+        x, argmax = MaxPoolWithArgmax()(x)
         return x, argmax
 
     def _decoder_block(self, x, argmax, filters_list):
-        x = self._max_unpool_from_argmax(x, argmax)
+        x = MaxUnpoolFromArgmax()(x, argmax)
         for filters in filters_list:
             x = self._conv_layer(x, filters)
         return x
