@@ -3,6 +3,10 @@ from models.segmentation.layers import MaxPoolWithArgmax, MaxUnpoolFromArgmax
 
 
 class SegNet(tf.keras.Model):
+    """
+    SegNet: A Deep Convolutional Encoder-Decoder Architecture for Image Segmentation
+    Reference: https://arxiv.org/abs/1511.00561
+    """
 
     def __init__(self, num_classes, **kwargs):
         super(SegNet, self).__init__(**kwargs)

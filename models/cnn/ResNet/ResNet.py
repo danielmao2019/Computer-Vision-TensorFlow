@@ -207,6 +207,8 @@ class ResNet(tf.keras.Model):
         return x
 
     def build(self, input_shape):
+        assert type(input_shape) == tuple, f"{type(input_shape)=}"
+        assert len(input_shape) == 3, f"{len(input_shape)=}"
         inputs = tf.keras.Input(shape=input_shape)
         outputs = self.call(inputs)
         return tf.keras.Model(
