@@ -31,6 +31,7 @@ def test_overfit(input_shape):
     logging.info(f"[RUNNING] Test case 'overfit' started.")
     model = AlexNet(num_classes=10)
     model = model.build(input_shape=input_shape)
+    loss = tf.keras.losses.SparseCategoricalCrossentropy()
     model.compile(
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         optimizer=tf.optimizers.SGD(learning_rate=1.0e-03, momentum=0.9),

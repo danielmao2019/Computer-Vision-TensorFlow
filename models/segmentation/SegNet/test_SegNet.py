@@ -28,6 +28,7 @@ def test_forward_pass(input_shape):
 def test_overfit(input_shape):
     model = SegNet(num_classes=10)
     model = model.build(input_shape=input_shape)
+    loss = tf.keras.losses.SparseCategoricalCrossentropy()
     model.compile(
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         optimizer=tf.optimizers.SGD(learning_rate=1.0e-01, momentum=0.9),
