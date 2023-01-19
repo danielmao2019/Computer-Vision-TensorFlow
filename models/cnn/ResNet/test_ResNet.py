@@ -28,6 +28,7 @@ def test_overfit(input_shape):
     image_h = image_w = 64
     model = ResNet(num_classes=10, version=18)
     model = model.build(input_shape=(image_h, image_w, 1))
+    loss = tf.keras.losses.SparseCategoricalCrossentropy()
     model.compile(
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         optimizer=tf.optimizers.SGD(),
