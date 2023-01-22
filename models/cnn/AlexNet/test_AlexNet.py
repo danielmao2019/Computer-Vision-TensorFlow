@@ -36,8 +36,18 @@ def test_overfit(input_shape):
         loss=tf.keras.losses.SparseCategoricalCrossentropy(),
         optimizer=tf.optimizers.SGD(learning_rate=1.0e-03, momentum=0.9),
     )
-    x_train = tf.random.uniform(shape=(1,)+model.layers[0].input_shape[0][1:])
-    y_train = tf.zeros(shape=(1,), dtype=tf.int64)
+    #x_train = tf.random.uniform(shape=(1,)+model.layers[0].input_shape[0][1:])
+    x_train = tf.concat([
+    tf.random.uniform(shape=(1,)+model.layers[0].input_shape[0][1:]),
+    tf.ones(shape=(1,)+model.layers[0].input_shape[0][1:], dtype=tf.float32),
+    tf.random.normal(shape=(1,)+model.layers[0].input_shape[0][1:]),
+], axis=0)    
+    y_train = tf.concat([
+    tf.zeros(shape=(1,), dtype=tf.int64),
+    tf.zeros(shape=(1,), dtype=tf.int64),
+    tf.zeros(shape=(1,), dtype=tf.int64),
+], axis=0)
+    #y_train = tf.zeros(shape=(1,), dtype=tf.int64)
     logging.debug(f"{x_train.shape=}")
     logging.debug(f"{y_train.shape=}")
     model.trainable = True
