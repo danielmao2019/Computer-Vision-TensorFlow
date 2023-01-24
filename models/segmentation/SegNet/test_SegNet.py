@@ -37,12 +37,12 @@ def test_overfit(input_shape):
     #y_train = tf.zeros(shape=(1,)+model.layers[0].input_shape[0][1:3], dtype=tf.int64)
     x_train = tf.concat([
     tf.random.uniform(shape=(1,)+model.layers[0].input_shape[0][1:]),
-    tf.ones(shape=(1,)+model.layers[0].input_shape[0][1:], dtype=tf.float32),
+    #tf.ones(shape=(1,)+model.layers[0].input_shape[0][1:], dtype=tf.float32),
     tf.random.normal(shape=(1,)+model.layers[0].input_shape[0][1:]),
 ], axis=0)
     y_train = tf.concat([
     tf.zeros(shape=(1,)+model.layers[0].input_shape[0][1:3], dtype=tf.int64),
-    tf.zeros(shape=(1,)+model.layers[0].input_shape[0][1:3], dtype=tf.int64),
+    #tf.zeros(shape=(1,)+model.layers[0].input_shape[0][1:3], dtype=tf.int64),
     tf.zeros(shape=(1,)+model.layers[0].input_shape[0][1:3], dtype=tf.int64),
 ], axis=0)
     logging.debug(f"{x_train.shape=}")
