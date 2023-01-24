@@ -39,19 +39,19 @@ def test_overfit(input_shape):
     #x_train = tf.random.uniform(shape=(1,)+model.layers[0].input_shape[0][1:])
     x_train = tf.concat([
     tf.random.uniform(shape=(1,)+model.layers[0].input_shape[0][1:]),
-    #tf.ones(shape=(1,)+model.layers[0].input_shape[0][1:], dtype=tf.float32),
+    tf.ones(shape=(1,)+model.layers[0].input_shape[0][1:], dtype=tf.float32),
     tf.random.normal(shape=(1,)+model.layers[0].input_shape[0][1:]),
 ], axis=0)    
     y_train = tf.concat([
     tf.zeros(shape=(1,), dtype=tf.int64),
-    #tf.zeros(shape=(1,), dtype=tf.int64),
+    tf.zeros(shape=(1,), dtype=tf.int64),
     tf.zeros(shape=(1,), dtype=tf.int64),
 ], axis=0)
     #y_train = tf.zeros(shape=(1,), dtype=tf.int64)
     logging.debug(f"{x_train.shape=}")
     logging.debug(f"{y_train.shape=}")
     model.trainable = True
-    model.fit(x_train, y_train, epochs=50)
+    model.fit(x_train, y_train, epochs=15)
     model.trainable = False
     error = loss(y_true=y_train, y_pred=model(x_train))
     assert error <= 1.0e-5, f"{error=}"
