@@ -51,10 +51,11 @@ def test_overfit(input_shape):
     logging.debug(f"{x_train.shape=}")
     logging.debug(f"{y_train.shape=}")
     model.trainable = True
-    model.fit(x_train, y_train, epochs=400)
+    model.fit(x_train, y_train, epochs=67)
     model.trainable = False
     error = loss(y_true=y_train, y_pred=model(x_train))
     assert error <= 1.0e-5, f"{error=}"
+        
 
 
 if __name__ == "__main__":
