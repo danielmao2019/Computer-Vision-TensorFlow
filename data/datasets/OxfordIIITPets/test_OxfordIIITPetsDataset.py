@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pytest
-from OxfordIIITPetsDataset import OxfordIIITPetsDataset # use this import if running from Computer-Vision-TensorFlow/data/datasets/OxfordIIITPets
-# from data.datasets.OxfordIIITPets.OxfordIIITPetsDataset import OxfordIIITPetsDataset # use this import if running pytest from Computer-Vision-TensorFlow
+# from OxfordIIITPetsDataset import OxfordIIITPetsDataset # use this import if running from Computer-Vision-TensorFlow/data/datasets/OxfordIIITPets
+from data.datasets.OxfordIIITPets.OxfordIIITPetsDataset import OxfordIIITPetsDataset # use this import if running pytest from Computer-Vision-TensorFlow
 import tensorflow_datasets as tfds
 import tensorflow as tf
 
