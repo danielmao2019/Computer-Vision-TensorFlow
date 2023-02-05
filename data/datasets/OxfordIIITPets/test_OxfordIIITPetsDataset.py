@@ -17,7 +17,7 @@ def test_OxfordIIITPetsDataset_dataset():
     assert(example[0].get_shape()[0] == 500)
     assert(example[0].get_shape()[1] == 500)
     assert(example[0].get_shape()[2] == 3)
-    assert(example[0].dtype == 'float32')
+    assert(example[0].dtype == 'tf.float32')
 
     assert(len(example[1].get_shape()) == 2)
     assert(example[1].get_shape()[0] == 500)
