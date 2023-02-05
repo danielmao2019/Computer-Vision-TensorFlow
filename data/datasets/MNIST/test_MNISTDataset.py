@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import pytest
-from MNISTDataset import MNISTDataset # use this import if running from Computer-Vision-TensorFlow/data/datasets/MNIST
-# from data.datasets.MNIST.MNISTDataset import MNISTDataset # use this import if running pytest from Computer-Vision-TensorFlow
+# from MNISTDataset import MNISTDataset # use this import if running from Computer-Vision-TensorFlow/data/datasets/MNIST
+from data.datasets.MNIST.MNISTDataset import MNISTDataset # use this import if running pytest from Computer-Vision-TensorFlow
 import tensorflow_datasets as tfds
 import tensorflow as tf
 
