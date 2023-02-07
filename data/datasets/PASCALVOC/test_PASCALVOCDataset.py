@@ -1,8 +1,7 @@
 import pytest
 from data.datasets.PASCALVOC.PASCALVOCDataset import PASCALVOCDataset
-# from PASCALVOCDataset import PASCALVOCDataset
 import tensorflow_datasets as tfds
-
+import tensorflow as tf
 
 @pytest.mark.dependency()
 def test_raw_dataset():
@@ -20,23 +19,20 @@ def test_raw_dataset():
 
 def test_PASCALVOC_dataset():
     dataset = PASCALVOCDataset(purpose='training', task='object_detection')
-    assert(len(dataset) == 2501)
+    assert(len(dataset) == 2501), f"{len(dataset)=}"
     example = dataset.get_example()
-    assert(type(example) == tuple)
-    assert(len(example) == 2)
+    assert(type(example) == tuple), f"{type(example)=}"
+    assert(len(example) == 2), f"{len(example)=}"
 
-    assert(len(example[0].get_shape()) == 3)
-    assert(example[0].get_shape()[0] == 480)
-    assert(example[0].get_shape()[1] == 389)
-    assert(example[0].get_shape()[2] == 3)
-    assert(example[0].dtype == 'tf.float32')
+    assert(len(example[0].get_shape()) == 3), f"{len(example[0].get_shape())=}"
+    assert(example[0].get_shape() == (480, 389, 3)), f"{example[0].get_shape()=}"
+    assert(example[0].dtype == tf.float32), f"{example[0].dtype=}"
 
-    assert(type(example[1]) == tuple)
-    assert(len(example[1]) == 2)
-    assert(len(example[1][0].get_shape()) == 2)
-    assert(example[1][0].get_shape()[0] == 4)
-    assert(example[1][0].get_shape()[1] == 4)
-    assert(example[1][0].dtype == 'tf.float32')
-    assert(len(example[1][1].get_shape()) == 1)
-    assert(example[1][1].get_shape()[0] == 4)
-    assert(example[1][1].dtype == 'int64')
+    assert(type(example[1]) == tuple), f"{type(example[1])=}"
+    assert(len(example[1]) == 2), f"{len(example[1])=}"
+    assert(len(example[1][0].get_shape()) == 2), f"{len(example[1][0].get_shape())=}"
+    assert(example[1][0].get_shape() == (4, 4)), f"{example[1][0].get_shape()=}"
+    assert(example[1][0].dtype == tf.float32), f"{example[1][0].dtype=}"
+    assert(len(example[1][1].get_shape()) == 1), f"{len(example[1][1].get_shape())=}"
+    assert(example[1][1].get_shape() == (4)), f"{example[1][1].get_shape()=}"
+    assert(example[1][1].dtype == tf.int64), f"{example[1][1].dtype=}"
