@@ -1,30 +1,16 @@
 import matplotlib.pyplot as plt
 import pytest
-# from MNISTDataset import MNISTDataset # use this import if running from Computer-Vision-TensorFlow/data/datasets/MNIST
-from data.datasets.MNIST.MNISTDataset import MNISTDataset # use this import if running pytest from Computer-Vision-TensorFlow
+from data.datasets.MNIST.MNISTDataset import MNISTDataset
 import tensorflow_datasets as tfds
 import tensorflow as tf
 
 # unit tests checking example from MNIST dataset for training asserting data shape, type, and load count
 def test_MNIST_dataset():
     dataset = MNISTDataset(purpose='training')
-    assert(len(dataset.core) == 60000)
+    assert(len(dataset.core) == 60000), f"{len(dataset.core)=}"
     image, label = dataset.get_example()
-    assert(len(image.shape) == 3)
-    assert(image.shape[0] == 28)
-    assert(image.shape[1] == 28)
-    assert(image.shape[2] == 1)
-    assert(len(label.shape) == 0)
-    assert(image.dtype == tf.float32)
-    assert(label.dtype == tf.int64)
-
-"""
-if __name__ == "__main__":
-    dataset = MNISTDataset(purpose='training')
-    print()
-    image, label = dataset.get_example()
-    plt.figure()
-    plt.imshow(image)
-    plt.title(f"label={label.numpy()}")
-    plt.show()
-"""
+    assert(len(image.shape) == 3), f"{len(image.shape)=}"
+    assert(image.shape == (28, 28, 1)), f"{image.shape=}"
+    assert(len(label.shape) == 0), f"{len(label.shape)=}"
+    assert(image.dtype == tf.float32), f"{image.dtype=}"
+    assert(label.dtype == tf.int64), f"{label.dtype=}"
